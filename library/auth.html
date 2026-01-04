@@ -1,0 +1,155 @@
+<!-- auth.html -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Library — Sign in / Create account</title>
+  <style>
+    :root{--bg:#081226;--card:#0f1724;--muted:#94a3b8;--accent:#38a5b8}
+    body{margin:0;min-height:100vh;background:linear-gradient(180deg,#071126,#081b30);color:#e6eef8;font-family:Inter,system-ui,Segoe UI,Roboto,Arial;display:flex;align-items:center;justify-content:center;padding:20px}
+    .card{background:var(--card);padding:20px;border-radius:12px;width:420px;box-shadow:0 10px 30px rgba(0,0,0,0.6)}
+    h2{margin:0 0 12px 0}
+    label{display:block;font-size:13px;color:var(--muted);margin-top:8px}
+    input[type=text]{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit}
+    .row{display:flex;gap:8px;margin-top:12px}
+    .btn{flex:1;padding:10px;border-radius:8px;border:0;cursor:pointer;font-weight:700}
+    .btn-primary{background:linear-gradient(90deg,var(--accent),#60a5fa);color:#02203a}
+    .btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted)}
+    .seg{display:flex;gap:6px;margin-top:12px}
+    .seg button{flex:1;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--muted);cursor:pointer}
+    .seg button.active{background:linear-gradient(90deg,var(--accent),#60a5fa);color:#02203a;border-color:rgba(56,189,248,0.15)}
+    .hint{font-size:13px;color:var(--muted);margin-top:10px}
+    .muted{color:var(--muted)}
+    .danger{color:#fca5a5}
+  </style>
+</head>
+<body>
+  <div class="card" role="main" aria-live="polite">
+    <h2>Library — Sign in or Create account</h2>
+
+    <div style="display:flex;gap:8px;">
+      <div style="flex:1">
+        <div class="muted">Mode</div>
+        <div class="seg" id="modeSeg">
+          <button data-mode="signin" class="active">Sign in</button>
+          <button data-mode="signup">Create account</button>
+        </div>
+      </div>
+      <div style="width:120px">
+        <div class="muted">Role</div>
+        <div class="seg" id="roleSeg">
+          <button data-role="staff" class="active">Staff</button>
+          <button data-role="admin">Admin</button>
+        </div>
+      </div>
+    </div>
+
+    <label for="email">Email</label>
+    <input id="email" type="text" autocomplete="email" placeholder="email@example.com" />
+
+    <label for="name">Full name</label>
+    <input id="name" type="text" placeholder="Your full name (optional for sign in)" />
+
+    <div class="row" style="margin-top:14px">
+      <button id="btnAction" class="btn btn-primary">Sign in as staff</button>
+      <button id="btnClear" class="btn btn-ghost">Clear</button>
+    </div>
+
+    <div id="msg" class="hint"></div>
+  </div>
+
+  <script>
+    // keys and helpers
+    const USERS_KEY = 'demo_accounts_v1';
+    const SESSION_KEY = 'demo_session_v1';
+    const XE = (s, r=document)=> r.querySelector(s);
+    const qAll = (s,r=document)=> Array.from((r||document).querySelectorAll(s));
+    function loadJSON(k){ try{ return JSON.parse(localStorage.getItem(k) || '{}'); }catch(e){return {}; }}
+    function saveJSON(k,v){ localStorage.setItem(k, JSON.stringify(v)); }
+
+    // seed demo accounts
+    (function seed(){
+      const u = loadJSON(USERS_KEY);
+      if(!u['admin@example.com']) u['admin@example.com'] = { email:'admin@example.com', name:'Administrator', role:'admin' };
+      if(!u['staff@example.com']) u['staff@example.com'] = { email:'staff@example.com', name:'Staff Member', role:'staff' };
+      saveJSON(USERS_KEY,u);
+    })();
+
+    // UI segments
+    let mode = 'signin'; // 'signin' | 'signup'
+    let role = 'staff'; // 'staff' | 'admin'
+    function updateActionLabel(){
+      XE('#btnAction').textContent = mode === 'signin' ? `Sign in as ${role}` : `Create account as ${role}`;
+    }
+    qAll('#modeSeg button').forEach(b=> b.addEventListener('click', ()=>{
+      qAll('#modeSeg button').forEach(x=> x.classList.remove('active'));
+      b.classList.add('active');
+      mode = b.getAttribute('data-mode');
+      updateActionLabel();
+    }));
+    qAll('#roleSeg button').forEach(b=> b.addEventListener('click', ()=>{
+      qAll('#roleSeg button').forEach(x=> x.classList.remove('active'));
+      b.classList.add('active');
+      role = b.getAttribute('data-role');
+      updateActionLabel();
+    }));
+
+    function showMsg(t, danger){
+      const el = XE('#msg');
+      el.textContent = t || '';
+      el.classList.toggle('danger', !!danger);
+    }
+
+    XE('#btnAction').addEventListener('click', ()=>{
+      const email = (XE('#email').value||'').trim().toLowerCase();
+      const name = (XE('#name').value||'').trim();
+      if(!email){ showMsg('Enter email', true); return; }
+      const users = loadJSON(USERS_KEY);
+      if(mode === 'signin'){
+        if(!users[email]){ showMsg('No account found. Switch to Create account to register.', true); return; }
+        // user exists - validate role matches chosen role; if mismatch, let them sign in as their role instead
+        if(users[email].role !== role){
+          // redirect to corresponding dashboard for their actual role
+          sessionStorage.setItem(SESSION_KEY, email);
+          showMsg(`Signing in as ${users[email].role} (account role differs from selected). Redirecting...`);
+          setTimeout(()=> {
+            if(users[email].role === 'admin') location.href = 'admin_dashboard.html';
+            else location.href = 'staff_dashboard.html';
+          }, 250);
+          return;
+        }
+        // correct role
+        sessionStorage.setItem(SESSION_KEY, email);
+        showMsg('Signed in. Redirecting...');
+        setTimeout(()=> {
+          if(role === 'admin') location.href = 'admin_dashboard.html';
+          else location.href = 'staff_dashboard.html';
+        }, 250);
+        return;
+      }
+
+      // create account
+      if(users[email]){ showMsg('Account already exists. Use Sign in.', true); return; }
+      users[email] = { email, name: name || email, role };
+      saveJSON(USERS_KEY, users);
+      sessionStorage.setItem(SESSION_KEY, email);
+      showMsg(`Account created as ${role}. Redirecting...`);
+      setTimeout(()=> {
+        if(role === 'admin') location.href = 'admin_dashboard.html';
+        else location.href = 'staff_dashboard.html';
+      }, 250);
+    });
+
+    XE('#btnClear').addEventListener('click', ()=>{
+      XE('#email').value=''; XE('#name').value=''; showMsg('');
+    });
+
+    // keyboard convenience: Enter to submit
+    XE('#email').addEventListener('keydown', (e)=> { if(e.key==='Enter') XE('#btnAction').click(); });
+    XE('#name').addEventListener('keydown', (e)=> { if(e.key==='Enter') XE('#btnAction').click(); });
+
+    updateActionLabel();
+  </script>
+</body>
+</html>

@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Sign Up / Log In Demo</title>
+  <style>
+    :root{
+      --bg:#0f1724; --card:#111827; --muted:#94a3b8; --accent:#38bdf8; --success:#10b981; --danger:#ef4444; --glass: rgba(255,255,255,0.04); --radius:12px;
+      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--bg);color:#e6eef8;padding:24px}
+    .card{background:var(--card);padding:18px;border-radius:10px;width:420px;box-shadow:0 6px 30px rgba(2,6,23,0.6)}
+    form{display:grid;gap:10px}
+    label{font-size:13px;color:var(--muted)}
+    input{padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:var(--glass);color:inherit}
+    .btn{padding:10px;border-radius:10px;border:0;cursor:pointer;font-weight:600}
+    .btn-primary{background:linear-gradient(90deg,var(--accent),#60a5fa);color:#02203a}
+    .btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted)}
+    .muted{color:var(--muted);font-size:13px}
+    .error{color:var(--danger)}
+    .success{color:var(--success)}
+  </style>
+</head>
+<body>
+  <div class="card" role="main" aria-live="polite">
+    <h2 style="margin:0 0 8px 0">Sign up or log in</h2>
+    <p class="muted" style="margin:0 0 12px 0">Accounts are stored locally in this demo.</p>
+
+    <form id="signupForm" autocomplete="on" novalidate>
+      <label>Full name</label>
+      <input id="su-name" type="text" placeholder="Jane Ramos" required />
+      <label>Email</label>
+      <input id="su-email" type="email" placeholder="jane@example.com" required />
+      <label>Password</label>
+      <input id="su-password" type="password" placeholder="At least 8 characters" minlength="8" required />
+      <label>Confirm password</label>
+      <input id="su-password-confirm" type="password" placeholder="Repeat password" minlength="8" required />
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+        <div class="muted">Demo storage only</div>
+        <button class="btn btn-primary" type="submit">Create account</button>
+      </div>
+      <div id="signupMessage" role="status" aria-live="polite" style="margin-top:8px"></div>
+    </form>
+
+    <hr style="margin:18px 0;border:none;border-top:1px solid rgba(255,255,255,0.03)">
+
+    <form id="loginForm" autocomplete="on" novalidate>
+      <label>Email</label>
+      <input id="li-email" type="email" placeholder="jane@example.com" required />
+      <label>Password</label>
+      <input id="li-password" type="password" placeholder="Your password" required />
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+        <div class="muted">Use created account</div>
+        <button class="btn btn-ghost" type="submit">Log in</button>
+      </div>
+      <div id="loginMessage" role="status" aria-live="polite" style="margin-top:8px"></div>
+    </form>
+  </div>
+
+  <script>
+    const XE = (sel, root=document) => root.querySelector(sel);
+    const USERS_KEY = 'demo_accounts_v1';
+    const SESSION_KEY = 'demo_session_v1';
+
+    function loadUsers(){ try{ const raw = localStorage.getItem(USERS_KEY); return raw ? JSON.parse(raw) : {}; } catch(e){ return {}; } }
+    function saveUsers(obj){ localStorage.setItem(USERS_KEY, JSON.stringify(obj)); }
+    function saveSession(email){ sessionStorage.setItem(SESSION_KEY, email); }
+    function clearSession(){ sessionStorage.removeItem(SESSION_KEY); }
+
+    async function randomSalt(length = 16){
+      const buf = crypto.getRandomValues(new Uint8Array(length));
+      return btoa(String.fromCharCode(...buf));
+    }
+    async function hashPassword(password, salt){
+      const enc = new TextEncoder();
+      const data = enc.encode(salt + password);
+      const hash = await crypto.subtle.digest('SHA-256', data);
+      const bytes = new Uint8Array(hash);
+      return Array.from(bytes).map(b=>b.toString(16).padStart(2,'0')).join('');
+    }
+
+    function setMessage(el, text, type=''){ el.textContent = text; el.className = type; }
+
+    XE('#signupForm').addEventListener('submit', async function(e){
+      e.preventDefault();
+      const name = XE('#su-name').value.trim();
+      const email = XE('#su-email').value.trim().toLowerCase();
+      const password = XE('#su-password').value;
+      const confirm = XE('#su-password-confirm').value;
+      const msgEl = XE('#signupMessage');
+      setMessage(msgEl, '', '');
+
+      if(!name || !email || !password || !confirm){ setMessage(msgEl, 'Please fill all fields.', 'error'); return; }
+      if(password.length < 8){ setMessage(msgEl, 'Password must be at least 8 characters.', 'error'); return; }
+      if(password !== confirm){ setMessage(msgEl, 'Passwords do not match.', 'error'); return; }
+
+      const users = loadUsers();
+      if(users[email]){ setMessage(msgEl, 'Account with that email already exists.', 'error'); return; }
+
+      const salt = await randomSalt(16);
+      const hash = await hashPassword(password, salt);
+      users[email] = { name, salt, hash, created: Date.now() };
+      saveUsers(users);
+
+      setMessage(msgEl, 'Account created. You can log in now.', 'success');
+      XE('#signupForm').reset();
+      XE('#li-email').value = email;
+    });
+
+    XE('#loginForm').addEventListener('submit', async function(e){
+      e.preventDefault();
+      const email = XE('#li-email').value.trim().toLowerCase();
+      const password = XE('#li-password').value;
+      const msgEl = XE('#loginMessage');
+      setMessage(msgEl, '', '');
+
+      if(!email || !password){ setMessage(msgEl, 'Please enter email and password.', 'error'); return; }
+
+      const users = loadUsers();
+      const user = users[email];
+      if(!user){ setMessage(msgEl, 'No account found with that email.', 'error'); return; }
+
+      const candidateHash = await hashPassword(password, user.salt);
+      if(candidateHash !== user.hash){ setMessage(msgEl, 'Incorrect password.', 'error'); return; }
+
+      // Save session and redirect to dashboard.html
+      saveSession(email);
+      // Use location.href to navigate to a different page in the same directory
+      window.location.href = 'dashboard.html';
+    });
+
+    // If you want to auto-redirect to dashboard when session exists:
+    document.addEventListener('DOMContentLoaded', () => {
+      if(sessionStorage.getItem(SESSION_KEY)) {
+        window.location.href = 'dashboard.html';
+      }
+    });
+  </script>
+</body>
+</html>

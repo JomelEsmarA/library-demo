@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Library Staff System — Detailed Professional DFD (Level 0 → Level 2)</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f5f7fb; --card:#ffffff; --muted:#6b7280; --ink:#0b1b2b;
+    --accent:#0ea5a4; --accent-2:#2563eb; --warn:#f59e0b; --error:#ef4444;
+    --glass: rgba(11,27,36,0.06); --radius:12px; --shadow:0 10px 30px rgba(11,27,36,0.06);
+    --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Courier New", monospace;
+  }
+  html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg),#eef4fa);font-family:Inter,system-ui,Segoe UI,Roboto,Arial;color:var(--ink)}
+  .wrap{max-width:1280px;margin:28px auto;padding:22px;border-radius:14px;background:linear-gradient(180deg,#fff,#fbfdff);box-shadow:var(--shadow)}
+  header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+  h1{font-size:18px;margin:0;font-weight:700}
+  .controls{display:flex;gap:8px}
+  button{background:transparent;border:1px solid rgba(11,27,36,0.06);padding:8px 12px;border-radius:10px;color:var(--ink);cursor:pointer;font-weight:600}
+  button.primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:white;border:none}
+  main{display:grid;grid-template-columns:1fr 380px;gap:18px}
+  @media (max-width:980px){ main{grid-template-columns:1fr} }
+  .panel{background:var(--card);padding:14px;border-radius:12px;border:1px solid rgba(11,27,36,0.04);box-shadow:0 6px 18px rgba(11,27,36,0.03)}
+  .diagram{background:#f8fafc;padding:16px;border-radius:12px;border:1px solid rgba(11,27,36,0.03);overflow:auto}
+  .muted{color:var(--muted);font-size:13px;line-height:1.45}
+  .legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+  .legend .item{display:flex;gap:8px;align-items:center}
+  .sw{width:18px;height:12px;border-radius:4px}
+  .kbd{background:#f3f4f6;padding:6px 8px;border-radius:8px;border:1px solid rgba(11,27,36,0.04);font-weight:700}
+  pre{background:#fbfdff;padding:10px;border-radius:8px;border:1px solid rgba(11,27,36,0.03);overflow:auto;font-size:13px}
+  details{margin-top:12px}
+  summary{cursor:pointer;font-weight:700}
+  footer{margin-top:14px;color:var(--muted);font-size:13px}
+  .mono{font-family:var(--mono);font-size:13px}
+  .note{margin-top:10px;color:var(--muted);font-size:13px}
+  .section{margin-top:12px}
+  /* print-friendly */
+  @media print{ .controls, footer, details summary { display:none } .wrap{box-shadow:none;border:none} }
+</style>
+</head>
+<body>
+<div class="wrap" role="application" aria-label="Detailed professional DFD">
+  <header>
+    <h1>Library Staff System — Detailed Professional DFD</h1>
+    <div class="controls" aria-hidden="false">
+      <button id="prev">◀ Prev</button>
+      <button id="next" class="primary">Next ▶</button>
+      <button id="export">Export notes</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="diagram panel" id="slides" aria-live="polite">
+      <!-- LEVEL 0 -->
+      <article id="level-0" class="slide" data-level="0">
+        <h2 style="margin:0 0 8px 0">Level 0 — Context (concise & explicit)</h2>
+        <div style="display:flex;gap:14px;align-items:flex-start">
+          <svg viewBox="0 0 1200 380" style="flex:1" role="img" aria-labelledby="l0t l0d">
+            <title id="l0t">Level 0 Context Diagram</title>
+            <desc id="l0d">Staff uses the Library Staff System which can open the user's email client with prefilled content.</desc>
+            <defs>
+              <marker id="arrow" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                <path d="M0 0 L10 5 L0 10 z" fill="#0b1b2b"/>
+              </marker>
+              <filter id="drop" x="-50%" y="-50%" width="200%" height="200%"><feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#0b1b2b" flood-opacity="0.06"/></filter>
+            </defs>
+
+            <!-- Actor Staff -->
+            <g transform="translate(40,80)">
+              <rect x="0" y="0" width="220" height="120" rx="12" fill="#ffffff" stroke="rgba(11,27,36,0.06)" />
+              <text x="110" y="50" text-anchor="middle" font-weight="700" font-size="16">Staff</text>
+              <text x="110" y="78" text-anchor="middle" fill="#6b7280" font-size="13">Librarians and clerks (UI)</text>
+            </g>
+
+            <!-- System boundary -->
+            <g transform="translate(300,36)">
+              <rect x="0" y="0" width="600" height="260" rx="14" fill="#ffffff" stroke="rgba(11,27,36,0.06)" />
+              <text x="300" y="56" text-anchor="middle" font-weight="700" font-size="16">Library Staff System</text>
+              <text x="300" y="80" text-anchor="middle" fill="#6b7280" font-size="13">Web UI · demo local persistence or server API (production)</text>
+            </g>
+
+            <!-- Email client -->
+            <g transform="translate(940,120)">
+              <rect x="0" y="0" width="200" height="100" rx="10" fill="#ffffff" stroke="rgba(11,27,36,0.06)"/>
+              <text x="100" y="44" text-anchor="middle" font-weight="700">Email Client</text>
+              <text x="100" y="66" text-anchor="middle" fill="#6b7280" font-size="12">mailto / Gmail compose (prefilled)</text>
+            </g>
+
+            <!-- Flows -->
+            <path d="M260 160 L300 160" stroke="#2563eb" stroke-width="2.6" fill="none" marker-end="url(#arrow)"/>
+            <text x="380" y="146" fill="#2563eb" font-size="13">1. ManageRequests: AddBook, EditBook, CreateLoan, ReturnLoan, Search, Export</text>
+
+            <path d="M780 160 L920 160" stroke="#0ea5a4" stroke-width="2.6" fill="none" marker-end="url(#arrow)"/>
+            <text x="860" y="146" fill="#0ea5a4" font-size="13">2. PrefilledCompose: to, subject, body (open external client)</text>
+
+            <path d="M620 220 L320 220" stroke="#374151" stroke-width="0.6" opacity="0.0" fill="none" />
+          </svg>
+
+          <aside style="width:360px">
+            <div style="font-weight:700">Plain summary</div>
+            <p class="muted">Everything starts with Staff using the system. The system stores and updates library records. When staff sends an email, the system opens the staff's email client with prefilled content; the system does not send email directly.</p>
+
+            <div style="margin-top:8px">
+              <div class="muted" style="font-weight:700">Why this matters</div>
+              <div class="muted">Clear boundary: demo storage vs production server, and externalizing email sending reduces complexity and improves auditability.</div>
+            </div>
+
+            <details style="margin-top:10px">
+              <summary>Speaker notes</summary>
+              <div class="muted">Introduce Level 0 in 30–60s. Emphasize actor and system boundary. Mention high-level actions that appear in Level 1 and Level 2.</div>
+            </details>
+          </aside>
+        </div>
+      </article>
+
+      <!-- LEVEL 1 -->
+      <article id="level-1" class="slide" data-level="1" style="display:none">
+        <h2 style="margin:0 0 8px 0">Level 1 — Processes, Data Stores, and Named Flows</h2>
+        <div style="display:flex;gap:14px;align-items:flex-start">
+          <svg viewBox="0 0 1200 620" style="flex:1" role="img" aria-labelledby="l1t l1d">
+            <title id="l1t">Level 1 — Processes and Data Stores</title>
+            <desc id="l1d">Major processes P1–P5, data stores D1–D5, and explicit named flows connecting them.</desc>
+            <defs>
+              <marker id="a" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+                <path d="M0 0 L10 5 L0 10 z" fill="#0b1b2b"/>
+              </marker>
+            </defs>
+
+            <!-- Processes row -->
+            <g transform="translate(40,36)">
+              <g id="p1"><rect x="0" y="0" width="220" height="84" rx="10" fill="#fffaf6" stroke="rgba(11,27,36,0.06)"/><text x="110" y="34" text-anchor="middle" font-weight="700">P1 Catalog Management</text><text x="110" y="54" text-anchor="middle" fill="#6b7280" font-size="12">Add / Edit / Search</text></g>
+              <g transform="translate(260,0)" id="p2"><rect x="0" y="0" width="220" height="84" rx="10" fill="#f8fafc" stroke="rgba(11,27,36,0.06)"/><text x="110" y="34" text-anchor="middle" font-weight="700">P2 Borrower Management</text><text x="110" y="54" text-anchor="middle" fill="#6b7280" font-size="12">Create / Search / Update</text></g>
+              <g transform="translate(520,0)" id="p3"><rect x="0" y="0" width="220" height="84" rx="10" fill="#fffaf6" stroke="rgba(11,27,36,0.06)"/><text x="110" y="34" text-anchor="middle" font-weight="700">P3 Loan Processing</text><text x="110" y="54" text-anchor="middle" fill="#6b7280" font-size="12">Validate / Reserve / Create</text></g>
+              <g transform="translate(780,0)" id="p4"><rect x="0" y="0" width="220" height="84" rx="10" fill="#fffaf6" stroke="rgba(11,27,36,0.06)"/><text x="110" y="34" text-anchor="middle" font-weight="700">P4 Returns Processing</text><text x="110" y="54" text-anchor="middle" fill="#6b7280" font-size="12">Find / Mark / Restore</text></g>
+              <g transform="translate(1040,0)" id="p5"><rect x="0" y="0" width="220" height="84" rx="10" fill="#f3f6ff" stroke="rgba(11,27,36,0.06)"/><text x="110" y="34" text-anchor="middle" font-weight="700">P5 Analytics & Export</text><text x="110" y="54" text-anchor="middle" fill="#6b7280" font-size="12">Reports / Exports</text></g>
+            </g>
+
+            <!-- Data stores -->
+            <g transform="translate(100,160)"><rect x="0" y="0" width="320" height="120" rx="12" fill="#fff" stroke="rgba(11,27,36,0.06)"/><text x="160" y="36" text-anchor="middle" font-weight="700">D1 Books</text><text x="160" y="64" text-anchor="middle" fill="#6b7280" font-size="12">id,title,author,totalCopies,availableCopies,lifetimeBorrowCount,createdAt,updatedAt</text></g>
+
+            <g transform="translate(440,160)"><rect x="0" y="0" width="320" height="120" rx="12" fill="#fff" stroke="rgba(11,27,36,0.06)"/><text x="160" y="36" text-anchor="middle" font-weight="700">D2 Borrowers</text><text x="160" y="64" text-anchor="middle" fill="#6b7280" font-size="12">id,name,studentNumber,email,activeLoanCount,lifetimeLoanCount,createdAt</text></g>
+
+            <g transform="translate(780,160)"><rect x="0" y="0" width="320" height="120" rx="12" fill="#fff" stroke="rgba(11,27,36,0.06)"/><text x="160" y="36" text-anchor="middle" font-weight="700">D3 Loans</text><text x="160" y="64" text-anchor="middle" fill="#6b7280" font-size="12">id,bookId,borrowerId,copies,loanDate,dueDate,returnedAt,status,fineAmount,processedBy</text></g>
+
+            <g transform="translate(40,300)"><rect x="0" y="0" width="320" height="84" rx="10" fill="#fff" stroke="rgba(11,27,36,0.06)"/><text x="160" y="36" text-anchor="middle" font-weight="700">D4 Counters (opt)</text><text x="160" y="56" text-anchor="middle" fill="#6b7280" font-size="11">aggregates for analytics</text></g>
+
+            <g transform="translate(380,300)"><rect x="0" y="0" width="320" height="84" rx="10" fill="#fff" stroke="rgba(11,27,36,0.06)"/><text x="160" y="36" text-anchor="middle" font-weight="700">D5 Session</text><text x="160" y="56" text-anchor="middle" fill="#6b7280" font-size="11">sessionId,userId,roles,lastActive,expiresAt</text></g>
+
+            <!-- Named flows (clear, numbered) -->
+            <path d="M260 90 L360 90" stroke="#2563eb" stroke-width="2.4" fill="none" marker-end="url(#a)"/>
+            <text x="310" y="78" fill="#2563eb" font-size="12" text-anchor="middle">1. Staff → P1: AddBookPayload / EditBookPayload / SearchQuery</text>
+
+            <path d="M500 90 L620 90" stroke="#2563eb" stroke-width="2.4" fill="none" marker-end="url(#a)"/>
+            <text x="560" y="78" fill="#2563eb" font-size="12" text-anchor="middle">2. P2 → P3: BorrowerRef / BorrowerCreate</text>
+
+            <path d="M640 200 L760 280" stroke="#0ea5a4" stroke-width="2.4" fill="none" marker-end="url(#a)"/>
+            <text x="700" y="235" fill="#0ea5a4" font-size="12" text-anchor="middle">3. P3 writes → D3: CreateLoanRecord</text>
+
+            <path d="M920 200 L860 260" stroke="#0ea5a4" stroke-width="1.2" fill="none" marker-end="url(#a)"/>
+            <text x="900" y="254" fill="#6b7280" font-size="11" text-anchor="middle">4. P4 reads D3: active loans list</text>
+
+            <path d="M600 360 L860 360" stroke="#2563eb" stroke-width="1.2" fill="none" marker-end="url(#a)"/>
+            <text x="730" y="346" fill="#2563eb" font-size="12" text-anchor="middle">5. P5 reads D1,D2,D3,D4 for reports</text>
+          </svg>
+
+          <aside style="width:360px">
+            <div style="font-weight:700">Level 1 summary (readable)</div>
+            <p class="muted">P1 and P2 are CRUD/lookup processes for Books and Borrowers. P3 creates loans after validation and reservation. P4 processes returns and restores availability. P5 is read-only for analytics and exports.</p>
+
+            <details style="margin-top:8px">
+              <summary>Important named payloads (examples)</summary>
+              <div class="muted" style="margin-top:8px">
+                <strong>AddBookPayload:</strong> {title,author,isbn,totalCopies,category,createdBy} <br>
+                <strong>CreateLoanPayload:</strong> {bookId, borrowerId|borrowerObj, copies, dueDate, requestedBy} <br>
+                <strong>ReturnPayload:</strong> {loanIds[], processedBy, processedAt}
+              </div>
+            </details>
+
+            <details style="margin-top:8px">
+              <summary>Security & audit</summary>
+              <div class="muted" style="margin-top:8px">
+                - PII (D2) must be encrypted at rest; RBAC limits who can call P3/P4. <br>
+                - All writes should log processedBy, timestamps, and before/after counts.
+              </div>
+            </details>
+          </aside>
+        </div>
+      </article>
+
+      <!-- LEVEL 2 -->
+      <article id="level-2" class="slide" data-level="2" style="display:none">
+        <h2 style="margin:0 0 8px 0">Level 2 — Detailed Loan & Returns (step-by-step)</h2>
+        <div style="display:flex;gap:14px;align-items:flex-start">
+          <div style="flex:1">
+            <svg viewBox="0 0 1200 640" role="img" aria-labelledby="l2t l2d">
+              <title id="l2t">Level 2 — Loan and Returns Detail</title>
+              <desc id="l2d">A2–A4 sub-processes for loan creation and B1–B4 for returns, with error flows and concurrency guidance.</desc>
+              <defs>
+                <marker id="m" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#0b1b2b"/></marker>
+              </defs>
+
+              <!-- Loan detailed lane -->
+              <g transform="translate(40,20)">
+                <rect x="0" y="0" width="1120" height="120" rx="10" fill="#fff" stroke="rgba(11,27,36,0.06)"/>
+                <text x="20" y="26" font-weight="700">Loan processing (A1 → A4)</text>
+                <text x="20" y="46" fill="#6b7280" font-size="12">A1 Validate; A2 Reserve; A3 Create Loan; A4 Update counters & notify</text>
+
+                <!-- Steps boxes -->
+                <g transform="translate(20,60)">
+                  <rect x="0" y="0" width="240" height="48" rx="8" fill="#fffaf6" stroke="var(--glass)"/><text x="120" y="30" text-anchor="middle" font-weight="700">A1 Validate</text>
+                  <text x="260" y="30" fill="#6b7280" font-size="12">schema, borrower exists/create, copies ≤ available</text>
+                </g>
+                <g transform="translate(300,60)">
+                  <rect x="0" y="0" width="240" height="48" rx="8" fill="#fffaf6" stroke="var(--glass)"/><text x="120" y="30" text-anchor="middle" font-weight="700">A2 Reserve</text>
+                  <text x="260" y="30" fill="#6b7280" font-size="12">atomic decrement or reservation record with TTL</text>
+                </g>
+                <g transform="translate(580,60)">
+                  <rect x="0" y="0" width="240" height="48" rx="8" fill="#fffaf6" stroke="var(--glass)"/><text x="120" y="30" text-anchor="middle" font-weight="700">A3 Create Loan</text>
+                  <text x="260" y="30" fill="#6b7280" font-size="12">insert D3 loan record status='active'</text>
+                </g>
+                <g transform="translate(860,60)">
+                  <rect x="0" y="0" width="260" height="48" rx="8" fill="#fffaf6" stroke="var(--glass)"/><text x="130" y="30" text-anchor="middle" font-weight="700">A4 Update & Notify</text>
+                  <text x="260" y="30" fill="#6b7280" font-size="12">increment counters, push UI refresh events</text>
+                </g>
+
+                <!-- arrows -->
+                <path d="M260 84 L300 84" stroke="#2563eb" stroke-width="2" fill="none" marker-end="url(#m)"/>
+                <path d="M540 84 L580 84" stroke="#2563eb" stroke-width="2" fill="none" marker-end="url(#m)"/>
+                <path d="M820 84 L860 84" stroke="#2563eb" stroke-width="2" fill="none" marker-end="url(#m)"/>
+
+                <!-- Transaction pseudocode area -->
+                <g transform="translate(20,140)">
+                  <rect x="0" y="0" width="1120" height="120" rx="10" fill="#fbfdff" stroke="rgba(11,27,36,0.04)"/>
+                  <text x="20" y="24" font-weight="700">Transaction pseudocode (server)</text>
+                  <foreignObject x="20" y="34" width="1080" height="76">
+                    <div xmlns="http://www.w3.org/1999/xhtml" class="mono" style="padding:6px;">
+<pre style="margin:0;color:#0b1b2b;line-height:1.3;">
+BEGIN TRANSACTION
+  book = SELECT * FROM Books WHERE id = :bookId FOR UPDATE
+  if book.availableCopies < copies:
+    ROLLBACK -> return {error:'INSUFFICIENT_COPIES', availableCopies: book.availableCopies}
+  book.availableCopies -= copies
+  UPDATE Books SET availableCopies = book.availableCopies, lifetimeBorrowCount = lifetimeBorrowCount + copies WHERE id = :bookId
+  IF borrower.id missing: CREATE Borrower record
+  INSERT INTO Loans (...) VALUES (...) -- status: active
+  UPDATE Borrowers SET activeLoanCount = activeLoanCount + copies, lifetimeLoanCount = lifetimeLoanCount + copies WHERE id = borrowerId
+COMMIT
+</pre>
+                    </div>
+                  </foreignObject>
+                </g>
+
+                <!-- Failure modes -->
+                <g transform="translate(20,272)">
+                  <rect x="0" y="0" width="1120" height="56" rx="8" fill="#fffaf6" stroke="rgba(245,158,11,0.12)"/>
+                  <text x="20" y="24" font-weight="700">Failure modes & guidance</text>
+                  <text x="20" y="44" fill="#6b7280" font-size="12">ValidationError -> return field errors; ReservationConflict -> return current availableCopies and suggest reduce copies; PersistenceFailure -> rollback and surface operator error (log for later repair).</text>
+                </g>
+              </g>
+
+              <!-- Returns detailed lane -->
+              <g transform="translate(40,344)">
+                <rect x="0" y="0" width="1120" height="160" rx="10" fill="#fff" stroke="rgba(11,27,36,0.06)"/>
+                <text x="20" y="26" font-weight="700">Returns processing (B1 → B4)</text>
+                <text x="20" y="46" fill="#6b7280" font-size="12">B1 Find loans → B2 Select → B3 Process Returns → B4 Restore copies & borrower stats</text>
+
+                <g transform="translate(20,60)">
+                  <rect x="0" y="0" width="240" height="40" rx="8" fill="#fffaf6" stroke="var(--glass)"/><text x="120" y="26" text-anchor="middle" font-weight="700">B1 Find Loans</text><text x="260" y="26" fill="#6b7280" font-size="12">search active loans by borrower</text>
+                </g>
+                <g transform="translate(300,60)">
+                  <rect x="0" y="0" width="240" height="40" rx="8" fill="#fffaf6" stroke="var(--glass)"/><text x="120" y="26" text-anchor="middle" font-weight="700">B2 Select</text><text x="260" y="26" fill="#6b7280" font-size="12">choose loans/copies to return</text>
+                </g>
+                <g transform="translate(580,60)">
+                  <rect x="0" y="0" width="240" height="40" rx="8" fill="#fffaf6" stroke="var(--glass)"/><text x="120" y="26" text-anchor="middle" font-weight="700">B3 Process</text><text x="260" y="26" fill="#6b7280" font-size="12">mark returnedAt, status; compute fines</text>
+                </g>
+                <g transform="translate(860,60)">
+                  <rect x="0" y="0" width="260" height="40" rx="8" fill="#fffaf6" stroke="var(--glass)"/><text x="130" y="26" text-anchor="middle" font-weight="700">B4 Restore & Update</text><text x="260" y="26" fill="#6b7280" font-size="12">increment availableCopies; decrement borrower activeLoanCount</text>
+                </g>
+
+                <!-- Returns guidance -->
+                <g transform="translate(20,112)">
+                  <rect x="0" y="0" width="1120" height="32" rx="6" fill="#fbfdff" stroke="rgba(11,27,36,0.03)"/>
+                  <text x="20" y="22" fill="#6b7280" font-size="12">Edge cases: already returned -> skip and report; partial returns -> split or decrement copies; over-return -> clamp at totalCopies and log for repair.</text>
+                </g>
+              </g>
+            </svg>
+
+            <div class="note">Use DB transactions for A2→A4. For client-demo (IndexedDB) adopt optimistic CAS with lastUpdated and retries (3 attempts) and show current availableCopies on conflict.</div>
+          </div>
+
+          <aside style="width:360px">
+            <div style="font-weight:700">Detailed examples & operational artifacts</div>
+
+            <details style="margin-top:8px">
+              <summary>CreateLoan example payload</summary>
+              <pre class="mono">{
+  "bookId":"book_123",
+  "borrower":{"id":"b_456","name":"Ana Santos","studentNumber":"S2025-01","email":"ana@example.com"},
+  "copies":1,
+  "dueDate":"2025-11-05T17:00:00Z",
+  "requestedBy":"staff_01",
+  "meta":{"source":"web","sessionId":"sess_987"}
+}</pre>
+            </details>
+
+            <details style="margin-top:8px">
+              <summary>Audit log example</summary>
+              <pre class="mono">{
+  "event":"LoanCreated",
+  "loanId":"loan_123",
+  "bookId":"book_123",
+  "borrowerId":"b_456",
+  "copies":1,
+  "processedBy":"staff_01",
+  "timestamp":"2025-10-26T12:34:00Z",
+  "before":{"availableCopies":2},
+  "after":{"availableCopies":1}
+}</pre>
+            </details>
+
+            <details style="margin-top:8px">
+              <summary>Repair script (concept)</summary>
+              <pre class="mono">// For each book:
+expectedAvailable = totalCopies - SUM(activeLoan.copies where loan.status='active' and bookId=book.id)
+if book.availableCopies != expectedAvailable:
+  log('repair', book.id, before=book.availableCopies, expected=expectedAvailable)
+  UPDATE Books SET availableCopies = expectedAvailable WHERE id = book.id</pre>
+            </details>
+
+            <details style="margin-top:8px">
+              <summary>Testing checklist</summary>
+              <div class="muted" style="margin-top:8px">
+                - Last-copy concurrent loan: ensure only one succeeds. <br>
+                - Return increases availableCopies and updates loan status. <br>
+                - Partial return behavior validated (split vs decrement). <br>
+                - Export/import preserves counters and timestamps.
+              </div>
+            </details>
+          </aside>
+        </div>
+      </article>
+    </section>
+
+    <aside class="panel" aria-label="Reference panel">
+      <div style="font-weight:700">Reference & quick actions</div>
+
+      <div class="section muted">
+        <strong>Data dictionary (short)</strong>
+        <ul>
+          <li><strong>D1 Books</strong>: id, title, author, isbn, totalCopies, availableCopies, lifetimeBorrowCount, createdAt, updatedAt</li>
+          <li><strong>D2 Borrowers</strong>: id, name, studentNumber, email, activeLoanCount, lifetimeLoanCount</li>
+          <li><strong>D3 Loans</strong>: id, bookId, borrowerId, copies, loanDate, dueDate, returnedAt, status, fineAmount, processedBy</li>
+        </ul>
+      </div>
+
+      <div class="section">
+        <div class="muted">Navigation</div>
+        <div style="display:flex;gap:8px;margin-top:8px"><div class="kbd">← Prev</div><div class="kbd">→ Next</div></div>
+      </div>
+
+      <details style="margin-top:12px">
+        <summary>Presentation tips</summary>
+        <div class="muted" style="margin-top:8px">
+          - Start with Level 0 for non-technical audience. <br>
+          - Show Level 1 to operations and managers. <br>
+          - Use Level 2 for devs and QA; step through pseudocode and tests.
+        </div>
+      </details>
+    </aside>
+  </main>
+
+  <footer>
+    <div class="muted">This diagram set is intentionally detailed and aligned to be presentation-ready. Use Export notes to download the short highlights.</div>
+  </footer>
+</div>
+
+<script>
+(function(){
+  const slides = [
+    document.getElementById('level-0'),
+    document.getElementById('level-1'),
+    document.getElementById('level-2')
+  ];
+  let idx = 0;
+  const prev = document.getElementById('prev');
+  const next = document.getElementById('next');
+  const exportBtn = document.getElementById('export');
+
+  function show(i){
+    slides.forEach((s,j)=> s.style.display = (i===j ? '' : 'none'));
+    prev.disabled = i===0;
+    next.textContent = i===slides.length-1 ? 'Restart' : 'Next ▶';
+  }
+
+  prev.addEventListener('click', ()=> { idx = Math.max(0, idx - 1); show(idx); });
+  next.addEventListener('click', ()=> { idx = (idx < slides.length - 1) ? idx + 1 : 0; show(idx); });
+  window.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight') { idx = Math.min(slides.length - 1, idx + 1); show(idx); }
+    if (e.key === 'ArrowLeft') { idx = Math.max(0, idx - 1); show(idx); }
+  });
+
+  exportBtn.addEventListener('click', () => {
+    const notes = [
+      'Level 0: Staff ↔ Library Staff System ↔ Email client (compose only).',
+      'Level 1: P1 Catalog; P2 Borrowers; P3 Loan; P4 Returns; P5 Analytics. D1 Books; D2 Borrowers; D3 Loans; D4 Counters; D5 Session.',
+      'Level 2: Loan: Validate → Reserve → Create → Update & notify. Returns: Find → Select → Process → Restore.'
+    ].join('\n\n');
+    const blob = new Blob([notes], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = 'dfd-detailed-notes.txt'; document.body.appendChild(a); a.click(); a.remove();
+    URL.revokeObjectURL(url);
+  });
+
+  show(0);
+})();
+</script>
+</body>
+</html>

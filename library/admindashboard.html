@@ -1,0 +1,72 @@
+<!-- admin_dashboard.html -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Admin Dashboard — Library</title>
+  <style>
+    :root{--bg:#071126;--card:#0f1724;--muted:#94a3b8;--accent:#38a5b8}
+    body{margin:0;background:linear-gradient(180deg,#071126,#0b243a);color:#e6eef8;font-family:Inter,system-ui,Segoe UI,Roboto,Arial;padding:18px}
+    header{display:flex;justify-content:space-between;align-items:center}
+    .brand{font-weight:700}
+    .muted{color:var(--muted)}
+    .btn{padding:8px 12px;border-radius:8px;border:0;cursor:pointer}
+    .btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted)}
+  </style>
+</head>
+<body>
+  <header>
+    <div><div class="brand">Library Admin Console</div><div class="muted" id="who">Loading...</div></div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <a class="btn btn-ghost" href="auth.html" id="signOut">Sign out</a>
+    </div>
+  </header>
+
+  <main style="margin-top:18px">
+    <section style="background:var(--card);padding:14px;border-radius:10px">
+      <h3 style="margin:0 0 8px 0">Admin tools</h3>
+      <div class="muted">This view is for admin users only. Use the user manager and system controls below.</div>
+
+      <div style="margin-top:12px">
+        <button id="btnUsers" class="btn btn-ghost">Manage users</button>
+        <button id="btnCounters" class="btn btn-ghost">Rebuild counters</button>
+      </div>
+
+      <div id="adminArea" style="margin-top:14px"></div>
+    </section>
+  </main>
+
+  <script>
+    const USERS_KEY = 'demo_accounts_v1';
+    const SESSION_KEY = 'demo_session_v1';
+    const XE = (s)=> document.querySelector(s);
+    function loadJSON(k){ try{ return JSON.parse(localStorage.getItem(k)||'{}'); }catch(e){return{};} }
+
+    function ensureAdmin(){
+      const email = sessionStorage.getItem(SESSION_KEY);
+      if(!email) { location.href = 'auth.html'; return null; }
+      const users = loadJSON(USERS_KEY);
+      const me = users[email];
+      if(!me || me.role !== 'admin'){ alert('Admin access required'); location.href = 'auth.html'; return null; }
+      return me;
+    }
+
+    const me = ensureAdmin();
+    if(!me) throw '';
+    XE('#who').textContent = `${me.name} — ${me.email} · role: ${me.role}`;
+
+    XE('#signOut').addEventListener('click', (e)=> { sessionStorage.removeItem(SESSION_KEY); });
+
+    XE('#btnUsers').addEventListener('click', ()=> {
+      const users = loadJSON(USERS_KEY);
+      const list = Object.values(users).map(u=> `${u.email} — ${u.name} — ${u.role}`).join('\n');
+      XE('#adminArea').textContent = list || 'No users';
+    });
+
+    XE('#btnCounters').addEventListener('click', ()=> {
+      alert('Rebuild counters from loans (use admin dashboard in full project to run).');
+    });
+  </script>
+</body>
+</html>
